@@ -27,7 +27,7 @@ buttons.click(function(){
         var item = jQuery(this),
             itemIsCorrect = (i === correctAnswer);
             
-        if (item.is(btn) && itemIsCorrect){
+        if (itemIsCorrect && item.has(btn).length){
             answerIsCorrect = true;
         }
         item.addClass(itemIsCorrect ? "correct" :"incorrect");

@@ -20,19 +20,21 @@ function resetButtons(){
 buttons.click(function(){
     var btn = jQuery(this),
         parent = btn.parents("li").eq(0),
-        isCorrect = false;
+        answerIsCorrect = false;
         
     parent.addClass("selected");
-    items.each(function(i, item){
-        if (i === correctAnswer){
-            isCorrect = true;
+    items.each(function(i){
+        var item = jQuery(this),
+            itemIsCorrect = (i === correctAnswer);
+            
+        if (item.is(btn) && itemIsCorrect){
+            answerIsCorrect = true;
         }
-        jQuery(item)
-            .addClass(isCorrect ? "correct" :"incorrect");
+        item.addClass(itemIsCorrect ? "correct" :"incorrect");
     });
         
     result
-        .text(isCorrect ? "You are right!" : "Nope. That's not it")
+        .text(answerIsCorrect ? "You are right!" : "Nope. That's not it")
         .removeClass("inactive");
         
     next

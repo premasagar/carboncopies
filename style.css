@@ -4,3 +4,9 @@
 .incorrect button {
     background-color:red;
 }
+.selected button {
+    border:3px solid blue;
+}
+.next .inactive {
+    display:none;
+}

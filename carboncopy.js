@@ -1,34 +1,47 @@
-var comparison = jQuery(".comparison"),
-    items = jQuery("li", comparison),
-    buttons = jQuery("button", comparison),
-    next = jQuery(".next"),
+var root = jQuery(".carboncopies"),
+    items = jQuery(".items li", root),
+    buttons = jQuery("button", items),
+    next = jQuery(".next", root),
+    result = jQuery(".result", root),
     correctAnswer = 1;
     
 function resetButtons(){
-    items.each(function(i, item){
-        jQuery(item)
-            .removeClass("selected")
-            .removeClass("correct")
-            .removeClass("incorrect");
-    });
+    next.addClass("inactive");
+    result.addClass("inactive");
+    
+    items
+        .removeClass("selected")
+        .removeClass("correct")
+        .removeClass("incorrect")
+        
+    buttons.attr("disabled", null);
 }
 
 buttons.click(function(){
     var btn = jQuery(this),
-        parent = btn.parents("li").eq(0);
+        parent = btn.parents("li").eq(0),
+        isCorrect = false;
         
     parent.addClass("selected");
     items.each(function(i, item){
-        jQuery(item).addClass(
-            i === correctAnswer ?
-                "correct" :
-                "incorrect"
-        );
+        if (i === correctAnswer){
+            isCorrect = true;
+        }
+        jQuery(item)
+            .addClass(isCorrect ? "correct" :"incorrect");
     });
-    next.removeClass("inactive");
+        
+    result
+        .text(isCorrect ? "You are right!" : "Nope. That's not it")
+        .removeClass("inactive");
+        
+    next
+        .removeClass("inactive");
+        
+    buttons
+        .attr("disabled", "disabled");
 });
 
 next.click(function(){
-    next.addClass("inactive"); 
     resetButtons();
 });

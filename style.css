@@ -1,12 +1,36 @@
-.correct button {
+.items {
+    list-style-type:none;
+    padding:0;
+    margin:0;
+    overflow:auto;
+    width:12.8em;
+}
+.items button {
+    width:6.2em;
+    padding:1em;
+    float:left;
+    height:6.2em;
+    margin:0.38em;
+}
+.items .correct button {
     background-color:green;
 }
-.incorrect button {
+.items .incorrect button {
     background-color:red;
 }
-.selected button {
+.items .selected button {
     border:3px solid blue;
 }
-.next .inactive {
+.items button:not([disabled]){
+    cursor:pointer;
+}
+
+.inactive {
     display:none;
+}
+.result.correct {
+    color:green;
+}
+.result.incorrect {
+    color:red;
 }

@@ -1,0 +1,1 @@
+We're trying to find out what people think the carbon effect of various activities and objects are compared to their actual effect with a bunch of fun comparisons between the two.

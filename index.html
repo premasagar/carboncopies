@@ -2,7 +2,7 @@
 <html lang=en>
 <head>
   <meta charset=utf-8>
-  <title>CarbonCopy</title>
+  <title>CarbonCopies</title>
   <link rel=stylesheet href="style.css">
 </head>
 <body>
@@ -18,20 +18,30 @@
     <span class=equivalent>is equivalent to</span>
     
     <ul class=comparison>
-        <li>
-            <span class=quantity>2</span>
-            <span class=object>cups of coffee</span>
+        <li class="incorrect">
+            <button>
+                <span class=quantity>2</span>
+                <span class=object>cups of coffee</span>
+            </button>
         </li>
-        <li>
-            <span class=quantity>1.6km</span>
-            <span class=conjunction>of</span>
-            <span class=object>train travel</span>
+        
+        <li class="selected correct">
+            <button>
+                <span class=quantity>1.6km</span>
+                <span class=conjunction>of</span>
+                <span class=object>train travel</span>
+            </button>
         </li>
+        
         <li>
-            <span class=quantity>164</span>
-            <span class=object>garden peas</span>
+            <button>
+                <span class=quantity>164</span>
+                <span class=object>garden peas</span>
+            </button>
         </li>
     </ul>
+    
+    <div class=extra-info></div>
     
   <script src="jquery.js"></script>
   <script src="carboncopy.js"></script>

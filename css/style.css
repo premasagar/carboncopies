@@ -1,3 +1,55 @@
+body {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	background: #666666;
+	background-image:url(bg.png);
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	color: #000000;
+}
+.carboncopies #container {
+	width: 46em;
+	background:#FFF;
+	margin: 0 auto; 
+	margin-top: 2em;
+	text-align: center;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-box-shadow: 8px 8px 10px #000;
+	-webkit-box-shadow: 8px 8px 10px #000;
+	box-shadow: 8px 8px 10px #000;
+}
+.carboncopies #header { 
+	background-color:#C00;
+	padding: 0 10px 0 20px;
+	text-align: center;
+	border-radius: 10px 10px 0px 0px;
+	-moz-border-radius: 10px 10px 0px 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+} 
+.carboncopies #header h1 {
+	margin: 0;
+	padding: 10px 0;
+}
+.carboncopies #mainContent {
+	padding: 0 20px;
+	background:#FFF;
+	text-align: center;
+}
+.carboncopies #footer { 
+	padding: 0 10px;
+	background-color:#C00;
+	border-radius: 0px 0px 10px 10px;
+	-moz-border-radius: 0px 0px 10px 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+} 
+.carboncopies #footer p {
+	margin: 0;
+	padding: 10px 0;
+}
 .options {
     list-style-type:none;
     padding:0;
@@ -12,6 +64,9 @@
     height:6.2em;
     margin:0.38em;
     border:2px solid #aaa;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px
 }
 .options .correct button {
     background-color:green;

@@ -41,12 +41,6 @@ var // Shortcuts
     templatesElem = jQuery(".templates script", root),
     templates = {},
     
-    // DICTIONARY
-    dict = {
-        rightAnswer: "Yes, that's it!",
-        wrongAnswer: "Nope. That's not right. Try again."
-    },
-    
     // SCORING
     score = 0,
     attempts = 0,
@@ -54,7 +48,8 @@ var // Shortcuts
     numOptions = 4,
     round = 1,
     pairsFound = 0,
-    pairsRemaining = 2,
+    totalPairs = 2,
+    pairsRemaining = totalPairs,
     unpairedCards = 0,
     set, requiredPairId,
     // DATA
@@ -74,16 +69,6 @@ function getBy(enumerable, findProperty, findValue){
             }
         }
     });
-}
-
-function reportRightWrong(answerIsCorrect){
-    if (answerIsCorrect === null){
-        report.addClass("inactive");
-    }
-    else {
-        report.removeClass("inactive");
-        rightwrong.text(answerIsCorrect ? dict.rightAnswer : dict.wrongAnswer);
-    }
 }
 
 function disableNext(){
@@ -108,13 +93,17 @@ function newQuestion(){
     
     set = randomiseArray(getBy(data, "set", String(round)));
     numOptions = set.length;
+    
+    optionsList.removeClass("pairs" + totalPairs);
+    totalPairs = pairsRemaining = numOptions / 2;
+    optionsList.addClass("pairs" + totalPairs);
 
     // If there's already been a question
     if (round > 1){
         optionContainers.remove();
-        reportRightWrong(null);
         points.text("");
         toptip.text("");
+        extraInfo.text("");
         pairsFound = 0;
         unpairedCards = 0;
     }
@@ -139,7 +128,8 @@ function updateScore(score){
 function yay(selectedContainer){
     var increment = scoreIncrementPerAttempt[attempts-1],
         pair = getBy(set, "pair", requiredPairId),
-        carbon = Number(pair[0].carbon);
+        carbon = Number(pair[0].carbon),
+        info = "";
     
     if (carbon > 1000){
         carbon = Number((carbon / 1000).toPrecision(2)) + "kg";
@@ -163,7 +153,18 @@ function yay(selectedContainer){
     optionContainers.removeClass("selected incorrect");
     optionContainers.not("correct").data("selected", null);
     
-    extraInfo.text("That's " + carbon + " of carbon. " + (pair[0].explanation || "") + (pair[1].explanation || ""));
+    if (!pair[0].explanation && !pair[1].explanation){
+        info += "That's " + carbon + " of carbon. ";
+    }
+    else {
+        if (pair[0].explanation){
+            info += pair[0].explanation + ". ";
+        }
+        if (pair[1].explanation){
+            info += pair[1].explanation + ". ";
+        }
+    }
+    extraInfo.text(info);
     
     if (!pairsRemaining){
         enableNext();
@@ -174,13 +175,16 @@ function setTopTip(){
     var tip;
     
     if (round === 1 && !unpairedCards && !pairsFound){
-        tip = "First, choose any card. Then pick a card that matches its carbon impact.";
+        tip = "First, choose any card. Then pick another one that matches its carbon impact. (Hint: hover over a card for more details).";
     }
     else if (round === 1 && pairsFound === 1){
         tip = "Great! Now pick another matching pair. (Hint: there are only two cards left, so it should be easy)."
     }
     else if (round === 1 && pairsFound === 2){
         tip = "W00t! Go on, click 'Next' for round 2..."
+    }
+    else if (round === 2 && !pairsFound){
+        tip = "A bit harder this time. By the way, you get more points the faster you get the right answer."
     }
     
     if (tip){
@@ -214,7 +218,6 @@ function chooseOption(){
     else {
         answerIsCorrect = (selectedContainer.data("pairId") === requiredPairId);
         selectedContainer.addClass(answerIsCorrect ? "correct" :"incorrect");
-        reportRightWrong(answerIsCorrect);
         
         if (answerIsCorrect){
             yay(selectedContainer);

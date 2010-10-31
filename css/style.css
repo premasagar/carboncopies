@@ -4,15 +4,12 @@ body {
 	background-image:url(../img/bg.png);
 	margin: 0;
 	padding: 0;
-	text-align: center;
 	color: #000000;
 }
 .carboncopies #container {
 	width: 46em;
 	background:#FFF;
-	margin: 0 auto; 
-	margin-top: 2em;
-	text-align: center;
+	margin: 0.62em auto 1em;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
@@ -36,12 +33,13 @@ body {
 .carboncopies #mainContent {
 	padding: 0 20px;
 	background:#FFF;
-	text-align: center;
-        position:relative;
-	height: 20em;
+	position:relative;
+	margin-bottom:1em;
 }
-.carboncopies #footer { 
+.carboncopies #footer {
+    font-size: 0.8em;
 	padding: 0 10px;
+	margin-bottom:1em;
 	background-color:#C00;
 	border-radius: 0px 0px 10px 10px;
 	-moz-border-radius: 0px 0px 10px 10px;
@@ -51,15 +49,42 @@ body {
 .carboncopies #footer p {
 	margin: 0;
 	padding: 10px 0;
+	color:#333;
+	text-align:left;
 }
 .carboncopies #footer a {
-    color:#fff;
+    color:#300;
+}
+.toptip {
+    height:3em;
+    padding:0.4em;
+    background-color:#ffc;
+    color:#993;
+    font-size:0.8em;
 }
 .options {
     list-style-type:none;
     padding:0;
     margin:0;
     overflow:auto;
+}
+.options.pairs2 { /* TODO: improve these */
+    width:20em;
+}
+.options.pairs3 {
+    width:25em;
+}
+.options.pairs4 {
+    width:40em;
+}
+.options.pairs5 {
+    width:50em;
+}
+.options.pairs6 {
+    width:60em;
+}
+.options.pairs7 {
+    width:70em;
 }
 .options button {
     width:8.2em;
@@ -88,16 +113,9 @@ body {
 .options .correct button, .options .incorrect button, .options .selected button {
     cursor:default;
 }
-
 .inactive {
     display:none;
 }
-.report { /* temp */
-    display:none;
-}
-.scoretext
-{
-position:absolute;
-left:600px;
-top:0px;
+.score-info {
+    margin-top:0.5em;
 }

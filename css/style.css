@@ -60,7 +60,6 @@ body {
     padding:0;
     margin:0;
     overflow:auto;
-    width:16.8em;
 }
 .options button {
     width:8.2em;
@@ -93,11 +92,8 @@ body {
 .inactive {
     display:none;
 }
-.report.correct {
-    color:green;
-}
-.report.incorrect {
-    color:red;
+.report { /* temp */
+    display:none;
 }
 .scoretext
 {

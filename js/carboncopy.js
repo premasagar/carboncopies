@@ -138,7 +138,15 @@ function updateScore(score){
 // correct answer was given
 function yay(selectedContainer){
     var increment = scoreIncrementPerAttempt[attempts-1],
-        pair = getBy(set, "pair", requiredPairId);
+        pair = getBy(set, "pair", requiredPairId),
+        carbon = Number(pair[0].carbon);
+    
+    if (carbon > 1000){
+        carbon = Number((carbon / 1000).toPrecision(2)) + "kg";
+    }
+    else {
+        carbon += "g";
+    }
     
     if (increment){
         score += increment;
@@ -155,7 +163,7 @@ function yay(selectedContainer){
     optionContainers.removeClass("selected incorrect");
     optionContainers.not("correct").data("selected", null);
     
-    extraInfo.text(pair[0].carbon + "g carbon. " + (pair[0].explanation || "") + (pair[1].explanation || ""));
+    extraInfo.text("That's " + carbon + " of carbon. " + (pair[0].explanation || "") + (pair[1].explanation || ""));
     
     if (!pairsRemaining){
         enableNext();
@@ -170,6 +178,9 @@ function setTopTip(){
     }
     else if (round === 1 && pairsFound === 1){
         tip = "Great! Now pick another matching pair. (Hint: there are only two cards left, so it should be easy)."
+    }
+    else if (round === 1 && pairsFound === 2){
+        tip = "W00t! Go on, click 'Next' for round 2..."
     }
     
     if (tip){

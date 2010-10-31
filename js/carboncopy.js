@@ -32,6 +32,7 @@ var // Shortcuts
     optionsList = jQuery(".options", root),
     optionContainers, options, selected,
     next = jQuery(".next", root),
+    extraInfo = jQuery(".extra-info", root),
     report = jQuery(".report", root),
     toptip = jQuery(".toptip", root),
     rightwrong = jQuery(".rightwrong", report),
@@ -49,14 +50,13 @@ var // Shortcuts
     // SCORING
     score = 0,
     attempts = 0,
-    scoreIncrementPerAttempt = [5, 3, 1],
+    scoreIncrementPerAttempt = [7, 5, 3, 1],
     numOptions = 4,
     round = 1,
     pairsFound = 0,
     pairsRemaining = 2,
     unpairedCards = 0,
     set, requiredPairId,
-    correctOption,
     // DATA
     data;
 
@@ -93,6 +93,12 @@ function disableNext(){
 function enableNext(){
     next.removeClass("inactive");
 }
+
+function randomiseArray(array){
+    return array.sort(function(){
+        return (Math.round(Math.random())-0.5);
+    });
+}
     
 function newQuestion(){
     var i = 0,
@@ -100,7 +106,7 @@ function newQuestion(){
         optionData,
         optionId;
     
-    set = getBy(data, "set", String(round));
+    set = randomiseArray(getBy(data, "set", String(round)));
     numOptions = set.length;
 
     // If there's already been a question
@@ -109,7 +115,6 @@ function newQuestion(){
         reportRightWrong(null);
         points.text("");
         toptip.text("");
-        attempts = 0;
         pairsFound = 0;
         unpairedCards = 0;
     }
@@ -132,7 +137,8 @@ function updateScore(score){
 
 // correct answer was given
 function yay(selectedContainer){
-    var increment = scoreIncrementPerAttempt[attempts-1];
+    var increment = scoreIncrementPerAttempt[attempts-1],
+        pair = getBy(set, "pair", requiredPairId);
     
     if (increment){
         score += increment;
@@ -142,11 +148,14 @@ function yay(selectedContainer){
     
     pairsFound ++;
     pairsRemaining --;
+    attempts = 0;
     unpairedCards = 0;
     
     selected.addClass("correct");
     optionContainers.removeClass("selected incorrect");
     optionContainers.not("correct").data("selected", null);
+    
+    extraInfo.text(pair[0].carbon + "g carbon. " + (pair[0].explanation || "") + (pair[1].explanation || ""));
     
     if (!pairsRemaining){
         enableNext();
@@ -162,8 +171,7 @@ function setTopTip(){
     else if (round === 1 && pairsFound === 1){
         tip = "Great! Now pick another matching pair. (Hint: there are only two cards left, so it should be easy)."
     }
-    console.log("toptip: ", round, unpairedCards, pairsFound, tip);
-
+    
     if (tip){
         toptip.text(tip);
     }

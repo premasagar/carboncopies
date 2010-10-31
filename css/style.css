@@ -1,7 +1,7 @@
 body {
 	font: 100% Verdana, Arial, Helvetica, sans-serif;
 	background: #666666;
-	background-image:url(img/bg.png);
+	background-image:url(../img/bg.png);
 	margin: 0;
 	padding: 0;
 	text-align: center;
@@ -51,6 +51,9 @@ body {
 .carboncopies #footer p {
 	margin: 0;
 	padding: 10px 0;
+}
+.carboncopies #footer a {
+    color:#fff;
 }
 .options {
     list-style-type:none;

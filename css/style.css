@@ -64,9 +64,10 @@ body {
     height:8.2em;
     margin:0.38em;
     border:2px solid #aaa;
-    border-radius: 8px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px
+    cursor:pointer;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
 }
 .options .guessthis button {
     background-color:#ff6;
@@ -83,8 +84,8 @@ body {
 .options .pair button {
     border-color:#090;
 }
-.options button:not([disabled]){
-    cursor:pointer;
+.options .correct button, .options .incorrect button, .options .guessthis button {
+    cursor:default;
 }
 
 .inactive {

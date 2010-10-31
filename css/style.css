@@ -13,14 +13,20 @@
     margin:0.38em;
     border:2px solid #aaa;
 }
+.options .guessthis button {
+    background-color:#ff6;
+}
 .options .correct button {
-    background-color:green;
+    background-color:#6c6;
 }
 .options .incorrect button {
-    background-color:red;
+    background-color:#f66;
 }
 .options .selected button {
     border-color:#33c;
+}
+.options .pair button {
+    border-color:#090;
 }
 .options button:not([disabled]){
     cursor:pointer;

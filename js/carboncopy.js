@@ -1,4 +1,7 @@
-var // DOM
+var // Shortcuts
+    M = Math,
+
+    // DOM
     root = jQuery(".carboncopies"),
     optionContainers = jQuery(".options li", root),
     options = jQuery("button", optionContainers),
@@ -18,9 +21,14 @@ var // DOM
     score = 0,
     attempts = 0,
     scoreIncrementPerAttempt = [5, 3, 1],
+    numOptions = 4,
     //
     correctOption = 1;
 
+
+function randomInt(length){
+    return M.ceil((length || 2) * M.random()) - 1;
+}
 
 function reportRightWrong(answerIsCorrect){
     if (answerIsCorrect === null){
@@ -53,24 +61,45 @@ function newQuestion(){
     points.text("");
     
     optionContainers
-        .removeClass("selected correct incorrect")
+        .data("selected", false)
+        .removeClass("selected correct incorrect");
         
     enableOptions();
     attempts = 0;
+    
+    if (!score){
+        pickOneAtRandom();
+    }
 }
 
 function updateScore(score){
     scoreElem.text(score);
 }
 
+function pickOneAtRandom(){
+    var index = randomInt(numOptions);
+    optionContainers.eq(index)
+        .data("selected", true)
+        .addClass("guessthis");
+    return index;
+}
+
 // correct answer was given
-function yay(){
+function yay(selectedContainer){
     var increment = scoreIncrementPerAttempt[attempts-1];
+    
     if (increment){
         score += increment;
         updateScore(score);
         points.text(increment + " points to you.");
     }
+    optionContainers.filter(".guessthis")
+        .removeClass("guessthis")
+        .addClass("correct pair");
+        
+    selectedContainer
+        .addClass("pair");
+        
     disableOptions();
     enableNext();
 }
@@ -81,6 +110,11 @@ function chooseOption(){
         selectedContainer = selectedOption.parents("li").eq(0),
         answerIsCorrect = false;
         
+    // This has already been selected
+    if (selectedContainer.data("selected")){
+        return false;
+    }
+    
     attempts++;
     
     optionContainers.each(function(i){
@@ -94,14 +128,13 @@ function chooseOption(){
         }
     });
     
-    selectedContainer.addClass(
-        "selected " +
-        (answerIsCorrect ? "correct" :"incorrect")
-    );
+    selectedContainer
+        .data("selected", true)
+        .addClass("selected " + (answerIsCorrect ? "correct" :"incorrect"));
         
     reportRightWrong(answerIsCorrect);
     if (answerIsCorrect){
-        yay();
+        yay(selectedContainer);
     }
 }
 
@@ -117,6 +150,8 @@ function init(){
         disableNext();
         newQuestion();
     });
+    
+    newQuestion();
 }
 
 init();

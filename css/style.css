@@ -1,7 +1,7 @@
 body {
 	font: 100% Verdana, Arial, Helvetica, sans-serif;
 	background: #666666;
-	background-image:url(bg.png);
+	background-image:url(img/bg.png);
 	margin: 0;
 	padding: 0;
 	text-align: center;
@@ -37,6 +37,8 @@ body {
 	padding: 0 20px;
 	background:#FFF;
 	text-align: center;
+        position:relative;
+	height: 20em;
 }
 .carboncopies #footer { 
 	padding: 0 10px;
@@ -69,22 +71,19 @@ body {
     -moz-border-radius:8px;
     -webkit-border-radius:8px;
 }
-.options .guessthis button {
+.options .selected button {
     background-color:#ff6;
+    border-color:#990;
 }
 .options .correct button {
     background-color:#6c6;
+    border-color:#090;
 }
 .options .incorrect button {
     background-color:#f66;
+    border-color:#900;
 }
-.options .selected button {
-    border-color:#33c;
-}
-.options .pair button {
-    border-color:#090;
-}
-.options .correct button, .options .incorrect button, .options .guessthis button {
+.options .correct button, .options .incorrect button, .options .selected button {
     cursor:default;
 }
 
@@ -96,4 +95,10 @@ body {
 }
 .report.incorrect {
     color:red;
+}
+.scoretext
+{
+position:absolute;
+left:600px;
+top:0px;
 }

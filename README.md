@@ -3,11 +3,10 @@ A carbon comparison game, built in a weekend at the Rewired State "[Carbon & Ene
 How well do you know the carbon impact of things? How many cups of coffee have same carbon impact as 1km of train travel? How well can you score?
 
 ## Hackers
-* [Premasagar Rose](http://twitter.com/premasagar), 
-* [Laura James](http://lbj.org.uk)
-* [David Kendal](http://twitter.com/dpkendal)
-* [Josh Pickett](http://twitter.com/lordjawsh)
-* [Isabell Long](http://twitter.com/issyl0)
+* JavaScript: [Premasagar Rose](http://twitter.com/premasagar)
+* Data manipulation: [Laura James](http://lbj.org.uk)
+* Design: [Josh Pickett](http://twitter.com/lordjawsh)
+* Concept: [Isabell Long](http://twitter.com/issyl0), [David Kendal](http://twitter.com/dpkendal)
 
 With big inspiration from [Duncan Clark](http://www.1010global.org/blogs/duncanclark) & [Luke Nicholson](http://moreassociates.com).
 

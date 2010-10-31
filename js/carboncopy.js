@@ -1,15 +1,44 @@
+"use strict";
+
+/*!
+* CarbonCopies
+*   github.com/premasagar/carboncopies
+*
+*//*
+    Carbon matching game for the Rewired State "Carbon & Energy Hack Day"
+
+    license
+        opensource.org/licenses/mit-license.php
+        
+*/
+
+
+
+// DEPENDENCIES
+
+/*!
+* Tim
+*   github.com/premasagar/tim
+*/
+var tim=function(){var e=/{{([a-z0-9_][\\.a-z0-9_]*)}}/gi;return function(f,g){return f.replace(e,function(h,i){for(var c=i.split("."),d=c.length,b=g,a=0;a<d;a++){b=b[c[a]];if(b===void 0)throw"tim: '"+c[a]+"' not found in "+h;if(a===d-1)return b}})}}();
+
+/////
+
 var // Shortcuts
     M = Math,
 
     // DOM
     root = jQuery(".carboncopies"),
-    optionContainers = jQuery(".options li", root),
-    options = jQuery("button", optionContainers),
+    optionsList = jQuery(".options", root),
+    optionContainers, options, selected,
     next = jQuery(".next", root),
     report = jQuery(".report", root),
+    toptip = jQuery(".toptip", root),
     rightwrong = jQuery(".rightwrong", report),
     points = jQuery(".points", report),
     scoreElem = jQuery(".score", root),
+    templatesElem = jQuery(".templates script", root),
+    templates = {},
     
     // DICTIONARY
     dict = {
@@ -22,12 +51,29 @@ var // Shortcuts
     attempts = 0,
     scoreIncrementPerAttempt = [5, 3, 1],
     numOptions = 4,
-    //
-    correctOption = 1;
+    round = 1,
+    pairsFound = 0,
+    pairsRemaining = 2,
+    unpairedCards = 0,
+    set, requiredPairId,
+    correctOption,
+    // DATA
+    data;
 
 
 function randomInt(length){
     return M.ceil((length || 2) * M.random()) - 1;
+}
+
+function getBy(enumerable, findProperty, findValue){
+    return jQuery.map(enumerable, function(el, i){
+        if (typeof el[findProperty] !== 'undefined'){
+            if (typeof findValue === 'undefined' ||
+                el[findProperty] === findValue){
+                return el;
+            }
+        }
+    });
 }
 
 function reportRightWrong(answerIsCorrect){
@@ -40,14 +86,6 @@ function reportRightWrong(answerIsCorrect){
     }
 }
 
-function disableOptions(){
-    options.attr("disabled", "disabled");
-}
-
-function enableOptions(){
-    options.attr("disabled", null);
-}
-
 function disableNext(){
     next.addClass("inactive");
 }
@@ -57,31 +95,39 @@ function enableNext(){
 }
     
 function newQuestion(){
-    reportRightWrong(null);
-    points.text("");
+    var i = 0,
+        html = "",
+        optionData,
+        optionId;
     
-    optionContainers
-        .data("selected", false)
-        .removeClass("selected correct incorrect");
-        
-    enableOptions();
-    attempts = 0;
-    
-    if (!score){
-        pickOneAtRandom();
+    set = getBy(data, "set", String(round));
+    numOptions = set.length;
+
+    // If there's already been a question
+    if (round > 1){
+        optionContainers.remove();
+        reportRightWrong(null);
+        points.text("");
+        toptip.text("");
+        attempts = 0;
+        pairsFound = 0;
+        unpairedCards = 0;
     }
+    
+    for (; i < numOptions; i++){
+        html = tim(templates.optionContainer, set[i]);
+        jQuery(html)
+            .appendTo(optionsList)
+            .data("pairId", set[i].pair);
+    }
+    cacheOptionsDom();
+    options.click(chooseOption);
+    
+    setTopTip();
 }
 
 function updateScore(score){
     scoreElem.text(score);
-}
-
-function pickOneAtRandom(){
-    var index = randomInt(numOptions);
-    optionContainers.eq(index)
-        .data("selected", true)
-        .addClass("guessthis");
-    return index;
 }
 
 // correct answer was given
@@ -93,22 +139,42 @@ function yay(selectedContainer){
         updateScore(score);
         points.text(increment + " points to you.");
     }
-    optionContainers.filter(".guessthis")
-        .removeClass("guessthis")
-        .addClass("correct pair");
-        
-    selectedContainer
-        .addClass("pair");
-        
-    disableOptions();
-    enableNext();
+    
+    pairsFound ++;
+    pairsRemaining --;
+    unpairedCards = 0;
+    
+    selected.addClass("correct");
+    optionContainers.removeClass("selected incorrect");
+    optionContainers.not("correct").data("selected", null);
+    
+    if (!pairsRemaining){
+        enableNext();
+    }
+}
+
+function setTopTip(){
+    var tip;
+    
+    if (round === 1 && !unpairedCards && !pairsFound){
+        tip = "First, choose any card. Then pick a card that matches its carbon impact.";
+    }
+    else if (round === 1 && pairsFound === 1){
+        tip = "Great! Now pick another matching pair. (Hint: there are only two cards left, so it should be easy)."
+    }
+    console.log("toptip: ", round, unpairedCards, pairsFound, tip);
+
+    if (tip){
+        toptip.text(tip);
+    }
 }
 
 // click handler on option buttons
 function chooseOption(){
     var selectedOption = jQuery(this),
         selectedContainer = selectedOption.parents("li").eq(0),
-        answerIsCorrect = false;
+        selectedIndex,
+        answerIsCorrect;
         
     // This has already been selected
     if (selectedContainer.data("selected")){
@@ -116,42 +182,54 @@ function chooseOption(){
     }
     
     attempts++;
+    points.text("");    
+    selectedContainer.data("selected", true);
     
-    optionContainers.each(function(i){
-        var container = jQuery(this),
-            optionIsCorrect = (i === correctOption);
-        
-        container.removeClass("selected");
-        
-        if (!answerIsCorrect && optionIsCorrect && container.has(selectedOption).length){
-            answerIsCorrect = true;
-        }
-    });
-    
-    selectedContainer
-        .data("selected", true)
-        .addClass("selected " + (answerIsCorrect ? "correct" :"incorrect"));
-        
-    reportRightWrong(answerIsCorrect);
-    if (answerIsCorrect){
-        yay(selectedContainer);
+    if (!unpairedCards){
+        // cache selected container
+        selected = selectedContainer;
+        selectedContainer.addClass("selected");
+        unpairedCards ++;
+        requiredPairId = selectedContainer.data("pairId");
     }
+    else {
+        answerIsCorrect = (selectedContainer.data("pairId") === requiredPairId);
+        selectedContainer.addClass(answerIsCorrect ? "correct" :"incorrect");
+        reportRightWrong(answerIsCorrect);
+        
+        if (answerIsCorrect){
+            yay(selectedContainer);
+        }
+    }
+    
+    setTopTip();
 }
 
-function carboncopiesData(data){
-    var headings = data.shift();
-    console.log(data);
+function carboncopiesData(collection){
+    var headings = collection.shift();
+    data = collection;
+    init();
+}
+
+function populateTemplates(){
+    templatesElem.each(function(i, template){
+        templates[template.className] = template.innerHTML;
+    });
+}
+
+function cacheOptionsDom(){
+    optionContainers = jQuery("li", optionsList);
+    options = jQuery("button", optionContainers);
 }
 
 function init(){
-    options.click(chooseOption);
+    populateTemplates();
 
     next.click(function(){
+        round ++;
         disableNext();
         newQuestion();
     });
     
     newQuestion();
 }
-
-init();

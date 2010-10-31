@@ -37,6 +37,8 @@ body {
 	padding: 0 20px;
 	background:#FFF;
 	text-align: center;
+        position:relative;
+	height: 20em;
 }
 .carboncopies #footer { 
 	padding: 0 10px;
@@ -93,4 +95,10 @@ body {
 }
 .report.incorrect {
     color:red;
+}
+.scoretext
+{
+position:absolute;
+left:600px;
+top:0px;
 }

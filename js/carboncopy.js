@@ -1,15 +1,43 @@
+"use strict";
+
+/*!
+* CarbonCopies
+*   github.com/premasagar/carboncopies
+*
+*//*
+    Carbon matching game for the Rewired State "Carbon & Energy Hack Day"
+
+    license
+        opensource.org/licenses/mit-license.php
+        
+*/
+
+
+
+// DEPENDENCIES
+
+/*!
+* Tim
+*   github.com/premasagar/tim
+*/
+var tim=function(){var e=/{{([a-z0-9_][\\.a-z0-9_]*)}}/gi;return function(f,g){return f.replace(e,function(h,i){for(var c=i.split("."),d=c.length,b=g,a=0;a<d;a++){b=b[c[a]];if(b===void 0)throw"tim: '"+c[a]+"' not found in "+h;if(a===d-1)return b}})}}();
+
+/////
+
 var // Shortcuts
     M = Math,
 
     // DOM
     root = jQuery(".carboncopies"),
-    optionContainers = jQuery(".options li", root),
-    options = jQuery("button", optionContainers),
+    optionsList = jQuery(".options", root),
+    optionContainers, options,
     next = jQuery(".next", root),
     report = jQuery(".report", root),
     rightwrong = jQuery(".rightwrong", report),
     points = jQuery(".points", report),
     scoreElem = jQuery(".score", root),
+    templatesElem = jQuery(".templates script", root),
+    templates = {},
     
     // DICTIONARY
     dict = {
@@ -22,12 +50,26 @@ var // Shortcuts
     attempts = 0,
     scoreIncrementPerAttempt = [5, 3, 1],
     numOptions = 4,
+    round = 1,
     //
-    correctOption = 1;
+    correctOption = 1,
+    //
+    data;
 
 
 function randomInt(length){
     return M.ceil((length || 2) * M.random()) - 1;
+}
+
+function getBy(enumerable, findProperty, findValue){
+    return jQuery.map(enumerable, function(el, i){
+        if (typeof el[findProperty] !== 'undefined'){
+            if (typeof findValue === 'undefined' ||
+                el[findProperty] === findValue){
+                return el;
+            }
+        }
+    });
 }
 
 function reportRightWrong(answerIsCorrect){
@@ -44,10 +86,6 @@ function disableOptions(){
     options.attr("disabled", "disabled");
 }
 
-function enableOptions(){
-    options.attr("disabled", null);
-}
-
 function disableNext(){
     next.addClass("inactive");
 }
@@ -57,19 +95,31 @@ function enableNext(){
 }
     
 function newQuestion(){
-    reportRightWrong(null);
-    points.text("");
-    
-    optionContainers
-        .data("selected", false)
-        .removeClass("selected correct incorrect pair");
+    var i = 0,
+        html = "",
+        set = getBy(data, "set", String(round)),
+        optionData,
+        optionId;
         
-    enableOptions();
-    attempts = 0;
-    
-    if (!score){
-        pickOneAtRandom();
+    numOptions = set.length;
+
+    // If there's already been a question
+    if (optionContainers){
+        optionContainers.remove();
+        reportRightWrong(null);
+        points.text("");
+        attempts = 0;
     }
+    
+    for (; i < numOptions; i++){
+        optionData = set[i];
+        html += tim(templates.optionContainer, optionData);
+    }
+    optionsList.html(html);
+    cacheOptionsDom();
+    options.click(chooseOption);
+    
+    pickOneAtRandom();
 }
 
 function updateScore(score){
@@ -138,13 +188,25 @@ function chooseOption(){
     }
 }
 
-function carboncopiesData(data){
-    var headings = data.shift();
-    console.log(data);
+function carboncopiesData(collection){
+    var headings = collection.shift();
+    data = collection;
+    init();
+}
+
+function populateTemplates(){
+    templatesElem.each(function(i, template){
+        templates[template.className] = template.innerHTML;
+    });
+}
+
+function cacheOptionsDom(){
+    optionContainers = jQuery("li", optionsList);
+    options = jQuery("button", optionContainers);
 }
 
 function init(){
-    options.click(chooseOption);
+    populateTemplates();
 
     next.click(function(){
         disableNext();
@@ -153,5 +215,3 @@ function init(){
     
     newQuestion();
 }
-
-init();

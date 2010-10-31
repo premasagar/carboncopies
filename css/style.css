@@ -1,36 +1,37 @@
-.items {
+.options {
     list-style-type:none;
     padding:0;
     margin:0;
     overflow:auto;
     width:12.8em;
 }
-.items button {
+.options button {
     width:6.2em;
     padding:1em;
     float:left;
     height:6.2em;
     margin:0.38em;
+    border:2px solid #aaa;
 }
-.items .correct button {
+.options .correct button {
     background-color:green;
 }
-.items .incorrect button {
+.options .incorrect button {
     background-color:red;
 }
-.items .selected button {
-    border:3px solid blue;
+.options .selected button {
+    border-color:#33c;
 }
-.items button:not([disabled]){
+.options button:not([disabled]){
     cursor:pointer;
 }
 
 .inactive {
     display:none;
 }
-.result.correct {
+.report.correct {
     color:green;
 }
-.result.incorrect {
+.report.incorrect {
     color:red;
 }

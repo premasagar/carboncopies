@@ -62,7 +62,7 @@ function newQuestion(){
     
     optionContainers
         .data("selected", false)
-        .removeClass("selected correct incorrect");
+        .removeClass("selected correct incorrect pair");
         
     enableOptions();
     attempts = 0;

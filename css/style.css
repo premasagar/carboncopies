@@ -71,7 +71,7 @@ body {
     -moz-border-radius:8px;
     -webkit-border-radius:8px;
 }
-.options .guessthis button {
+.options .selected button {
     background-color:#ff6;
     border-color:#990;
 }
@@ -83,7 +83,7 @@ body {
     background-color:#f66;
     border-color:#900;
 }
-.options .correct button, .options .incorrect button, .options .guessthis button {
+.options .correct button, .options .incorrect button, .options .selected button {
     cursor:default;
 }
 

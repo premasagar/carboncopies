@@ -30,7 +30,7 @@ var // Shortcuts
     // DOM
     root = jQuery(".carboncopies"),
     optionsList = jQuery(".options", root),
-    optionContainers, options,
+    optionContainers, options, selected,
     next = jQuery(".next", root),
     report = jQuery(".report", root),
     toptip = jQuery(".toptip", root),
@@ -55,7 +55,8 @@ var // Shortcuts
     pairsFound = 0,
     pairsRemaining = 2,
     unpairedCards = 0,
-    correctOption = 1,
+    set, requiredPairId,
+    correctOption,
     // DATA
     data;
 
@@ -96,10 +97,10 @@ function enableNext(){
 function newQuestion(){
     var i = 0,
         html = "",
-        set = getBy(data, "set", String(round)),
         optionData,
         optionId;
-        
+    
+    set = getBy(data, "set", String(round));
     numOptions = set.length;
 
     // If there's already been a question
@@ -114,10 +115,11 @@ function newQuestion(){
     }
     
     for (; i < numOptions; i++){
-        optionData = set[i];
-        html += tim(templates.optionContainer, optionData);
+        html = tim(templates.optionContainer, set[i]);
+        jQuery(html)
+            .appendTo(optionsList)
+            .data("pairId", set[i].pair);
     }
-    optionsList.html(html);
     cacheOptionsDom();
     options.click(chooseOption);
     
@@ -142,10 +144,9 @@ function yay(selectedContainer){
     pairsRemaining --;
     unpairedCards = 0;
     
-    optionContainers.filter(".guessthis")
-        .addClass("correct");
-    
-    optionContainers.removeClass("guessthis incorrect");
+    selected.addClass("correct");
+    optionContainers.removeClass("selected incorrect");
+    optionContainers.not("correct").data("selected", null);
     
     if (!pairsRemaining){
         enableNext();
@@ -153,23 +154,27 @@ function yay(selectedContainer){
 }
 
 function setTopTip(){
-    var tip = "";
+    var tip;
     
-    if (round === 1 && !unpairedCards){
+    if (round === 1 && !unpairedCards && !pairsFound){
         tip = "First, choose any card. Then pick a card that matches its carbon impact.";
     }
     else if (round === 1 && pairsFound === 1){
-        tip = "Great! Now pick another matching pair. (Hint: there's only two cards left)."
+        tip = "Great! Now pick another matching pair. (Hint: there are only two cards left, so it should be easy)."
     }
+    console.log("toptip: ", round, unpairedCards, pairsFound, tip);
 
-    toptip.text(tip);
+    if (tip){
+        toptip.text(tip);
+    }
 }
 
 // click handler on option buttons
 function chooseOption(){
     var selectedOption = jQuery(this),
         selectedContainer = selectedOption.parents("li").eq(0),
-        answerIsCorrect = false;
+        selectedIndex,
+        answerIsCorrect;
         
     // This has already been selected
     if (selectedContainer.data("selected")){
@@ -177,24 +182,18 @@ function chooseOption(){
     }
     
     attempts++;
-    points.text("");
-    
-    optionContainers.each(function(i){
-        var container = jQuery(this),
-            optionIsCorrect = (i === correctOption);
-        
-        if (!answerIsCorrect && optionIsCorrect && container.has(selectedOption).length){
-            answerIsCorrect = true;
-        }
-    });
-    
+    points.text("");    
     selectedContainer.data("selected", true);
     
     if (!unpairedCards){
-        selectedContainer.addClass("guessthis");
+        // cache selected container
+        selected = selectedContainer;
+        selectedContainer.addClass("selected");
         unpairedCards ++;
+        requiredPairId = selectedContainer.data("pairId");
     }
     else {
+        answerIsCorrect = (selectedContainer.data("pairId") === requiredPairId);
         selectedContainer.addClass(answerIsCorrect ? "correct" :"incorrect");
         reportRightWrong(answerIsCorrect);
         

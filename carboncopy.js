@@ -17,6 +17,11 @@ function resetButtons(){
     buttons.attr("disabled", null);
 }
 
+function carboncopiesData(data){
+    var headings = data.shift();
+    console.log(data);
+}
+
 buttons.click(function(){
     var btn = jQuery(this),
         parent = btn.parents("li").eq(0),

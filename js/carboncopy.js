@@ -4,6 +4,8 @@ var // DOM
     options = jQuery("button", optionContainers),
     next = jQuery(".next", root),
     report = jQuery(".report", root),
+    rightwrong = jQuery(".rightwrong", report),
+    points = jQuery(".points", report),
     scoreElem = jQuery(".score", root),
     
     // DICTIONARY
@@ -25,17 +27,9 @@ function reportRightWrong(answerIsCorrect){
         report.addClass("inactive");
     }
     else {
-        report
-            .removeClass("inactive")
-            .text(answerIsCorrect ? dict.rightAnswer : dict.wrongAnswer);
+        report.removeClass("inactive");
+        rightwrong.text(answerIsCorrect ? dict.rightAnswer : dict.wrongAnswer);
     }
-}
-
-// correct answer was given
-function yay(){
-    updateScore(attempts);
-    disableOptions();
-    enableNext();
 }
 
 function disableOptions(){
@@ -56,6 +50,7 @@ function enableNext(){
     
 function newQuestion(){
     reportRightWrong(null);
+    points.text("");
     
     optionContainers
         .removeClass("selected correct incorrect")
@@ -64,12 +59,20 @@ function newQuestion(){
     attempts = 0;
 }
 
-function updateScore(attempts){
+function updateScore(score){
+    scoreElem.text(score);
+}
+
+// correct answer was given
+function yay(){
     var increment = scoreIncrementPerAttempt[attempts-1];
     if (increment){
         score += increment;
+        updateScore(score);
+        points.text(increment + " points to you.");
     }
-    scoreElem.text(score);
+    disableOptions();
+    enableNext();
 }
 
 // click handler on option buttons
@@ -78,33 +81,19 @@ function chooseOption(){
         selectedContainer = selectedOption.parents("li").eq(0),
         answerIsCorrect = false;
         
-    attempts++;    
-    
-    /* 
-    optionContainers.each(function(i){
-        var container = jQuery(this),
-            optionIsCorrect = (i === correctOption);
-            
-        if (optionIsCorrect && container.has(selectedOption).length){
-            answerIsCorrect = true;
-        }
-        container
-            .removeClass("selected")
-            .addClass(optionIsCorrect ? "correct" :"incorrect");
-    });
-    */
+    attempts++;
     
     optionContainers.each(function(i){
         var container = jQuery(this),
             optionIsCorrect = (i === correctOption);
         
-        container.removeClass("selected")
+        container.removeClass("selected");
         
         if (!answerIsCorrect && optionIsCorrect && container.has(selectedOption).length){
             answerIsCorrect = true;
         }
     });
-    console.log(answerIsCorrect);
+    
     selectedContainer.addClass(
         "selected " +
         (answerIsCorrect ? "correct" :"incorrect")

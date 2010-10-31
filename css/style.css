@@ -71,18 +71,15 @@ body {
 }
 .options .guessthis button {
     background-color:#ff6;
+    border-color:#990;
 }
 .options .correct button {
     background-color:#6c6;
+    border-color:#090;
 }
 .options .incorrect button {
     background-color:#f66;
-}
-.options .selected button {
-    border-color:#33c;
-}
-.options .pair button {
-    border-color:#090;
+    border-color:#900;
 }
 .options .correct button, .options .incorrect button, .options .guessthis button {
     cursor:default;

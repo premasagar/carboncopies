@@ -33,6 +33,7 @@ var // Shortcuts
     optionContainers, options,
     next = jQuery(".next", root),
     report = jQuery(".report", root),
+    toptip = jQuery(".toptip", root),
     rightwrong = jQuery(".rightwrong", report),
     points = jQuery(".points", report),
     scoreElem = jQuery(".score", root),
@@ -51,9 +52,11 @@ var // Shortcuts
     scoreIncrementPerAttempt = [5, 3, 1],
     numOptions = 4,
     round = 1,
-    //
+    pairsFound = 0,
+    pairsRemaining = 2,
+    unpairedCards = 0,
     correctOption = 1,
-    //
+    // DATA
     data;
 
 
@@ -82,10 +85,6 @@ function reportRightWrong(answerIsCorrect){
     }
 }
 
-function disableOptions(){
-    options.attr("disabled", "disabled");
-}
-
 function disableNext(){
     next.addClass("inactive");
 }
@@ -104,11 +103,14 @@ function newQuestion(){
     numOptions = set.length;
 
     // If there's already been a question
-    if (optionContainers){
+    if (round > 1){
         optionContainers.remove();
         reportRightWrong(null);
         points.text("");
+        toptip.text("");
         attempts = 0;
+        pairsFound = 0;
+        unpairedCards = 0;
     }
     
     for (; i < numOptions; i++){
@@ -119,19 +121,11 @@ function newQuestion(){
     cacheOptionsDom();
     options.click(chooseOption);
     
-    pickOneAtRandom();
+    setTopTip();
 }
 
 function updateScore(score){
     scoreElem.text(score);
-}
-
-function pickOneAtRandom(){
-    var index = randomInt(numOptions);
-    optionContainers.eq(index)
-        .data("selected", true)
-        .addClass("guessthis");
-    return index;
 }
 
 // correct answer was given
@@ -143,15 +137,32 @@ function yay(selectedContainer){
         updateScore(score);
         points.text(increment + " points to you.");
     }
+    
+    pairsFound ++;
+    pairsRemaining --;
+    unpairedCards = 0;
+    
     optionContainers.filter(".guessthis")
-        .removeClass("guessthis")
-        .addClass("correct pair");
-        
-    selectedContainer
-        .addClass("pair");
-        
-    disableOptions();
-    enableNext();
+        .addClass("correct");
+    
+    optionContainers.removeClass("guessthis incorrect");
+    
+    if (!pairsRemaining){
+        enableNext();
+    }
+}
+
+function setTopTip(){
+    var tip = "";
+    
+    if (round === 1 && !unpairedCards){
+        tip = "First, choose any card. Then pick a card that matches its carbon impact.";
+    }
+    else if (round === 1 && pairsFound === 1){
+        tip = "Great! Now pick another matching pair. (Hint: there's only two cards left)."
+    }
+
+    toptip.text(tip);
 }
 
 // click handler on option buttons
@@ -166,26 +177,33 @@ function chooseOption(){
     }
     
     attempts++;
+    points.text("");
     
     optionContainers.each(function(i){
         var container = jQuery(this),
             optionIsCorrect = (i === correctOption);
-        
-        container.removeClass("selected");
         
         if (!answerIsCorrect && optionIsCorrect && container.has(selectedOption).length){
             answerIsCorrect = true;
         }
     });
     
-    selectedContainer
-        .data("selected", true)
-        .addClass("selected " + (answerIsCorrect ? "correct" :"incorrect"));
-        
-    reportRightWrong(answerIsCorrect);
-    if (answerIsCorrect){
-        yay(selectedContainer);
+    selectedContainer.data("selected", true);
+    
+    if (!unpairedCards){
+        selectedContainer.addClass("guessthis");
+        unpairedCards ++;
     }
+    else {
+        selectedContainer.addClass(answerIsCorrect ? "correct" :"incorrect");
+        reportRightWrong(answerIsCorrect);
+        
+        if (answerIsCorrect){
+            yay(selectedContainer);
+        }
+    }
+    
+    setTopTip();
 }
 
 function carboncopiesData(collection){
@@ -209,6 +227,7 @@ function init(){
     populateTemplates();
 
     next.click(function(){
+        round ++;
         disableNext();
         newQuestion();
     });

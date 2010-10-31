@@ -16,48 +16,30 @@
         Your score: <span class=score>0</span>
     </div>
     
-    <ul class=options>
-        <li>
-            <button title="lorem ipsum">
-                <span class=quantity>2</span>
-                <span class=item>cups of coffee</span>
-            </button>
-        </li>
-        
-        <li>
-            <button title="lorem ipsum">
-                <span class=quantity>1.6km</span>
-                <span class=conjunction>of</span>
-                <span class=item>train travel</span>
-            </button>
-        </li>
-        
-        <li>
-            <button title="lorem ipsum">
-                <span class=quantity>164</span>
-                <span class=item>garden peas</span>
-            </button>
-        </li>
-        
-        <li>
-            <button title="lorem ipsum">
-                <span class=quantity>1</span>
-                <span class=item>loaf of bread</span>
-            </button>
-        </li>
-    </ul>
+    <ul class=options></ul>
     
     <p class="report inactive">
         <span class=rightwrong></span>
         <span class=points></span>
-    </p>    
+    </p>
+    
     <button class="next inactive">Next</button>
     
     <div class=extra-info>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In est leo, venenatis ut placerat eu, aliquet at felis. Nam aliquam semper enim nec hendrerit.</div>
     
+    <div class=templates>
+        <script type=tim class=optionContainer>
+            <li>
+                <button title="{{detail}}">
+                    <span class=item>{{item}}</span>
+                </button>
+            </li>
+        </script>
+    </div>
+    
   <script src="js/jquery.js"></script>
   <script src="js/carboncopy.js"></script>
-  <script src="data/data.js"></script>
+  <script src="data/game.js"></script>
   </div>
   <div id="footer">
     <p>Footer</p>

@@ -150,7 +150,7 @@ function yay(selectedContainer){
     
     selected.addClass("correct");
     optionContainers.removeClass("selected incorrect");
-    optionContainers.not("correct").data("selected", null);
+    optionContainers.not(".correct").data("selected", null);
     
     info += "That's " + carbon + " of carbon. ";
     if (pair[0].explanation){

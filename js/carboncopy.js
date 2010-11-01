@@ -102,7 +102,6 @@ function newQuestion(){
     if (round > 1){
         optionContainers.remove();
         points.text("");
-        toptip.text("");
         extraInfo.text("");
         pairsFound = 0;
         unpairedCards = 0;
@@ -126,7 +125,7 @@ function updateScore(score){
 
 // correct answer was given
 function yay(selectedContainer){
-    var increment = scoreIncrementPerAttempt[attempts-1],
+    var increment = scoreIncrementPerAttempt[attempts + pairsFound - 1],
         pair = getBy(set, "pair", requiredPairId),
         carbon = Number(pair[0].carbon),
         info = "";
@@ -153,16 +152,12 @@ function yay(selectedContainer){
     optionContainers.removeClass("selected incorrect");
     optionContainers.not("correct").data("selected", null);
     
-    if (!pair[0].explanation && !pair[1].explanation){
-        info += "That's " + carbon + " of carbon. ";
+    info += "That's " + carbon + " of carbon. ";
+    if (pair[0].explanation){
+        info += pair[0].explanation + ". ";
     }
-    else {
-        if (pair[0].explanation){
-            info += pair[0].explanation + ". ";
-        }
-        if (pair[1].explanation){
-            info += pair[1].explanation + ". ";
-        }
+    if (pair[1].explanation){
+        info += pair[1].explanation + ". ";
     }
     extraInfo.text(info);
     
@@ -175,7 +170,7 @@ function setTopTip(){
     var tip;
     
     if (round === 1 && !unpairedCards && !pairsFound){
-        tip = "First, choose any card. Then pick another one that matches its carbon impact. (Hint: hover over a card for more details).";
+        tip = "Click a card, any card. Then pick another that matches its carbon footprint. (Hint: you can hover over a card for more details).";
     }
     else if (round === 1 && pairsFound === 1){
         tip = "Great! Now pick another matching pair. (Hint: there are only two cards left, so it should be easy)."
@@ -188,7 +183,7 @@ function setTopTip(){
     }
     
     if (tip){
-        toptip.text(tip);
+        toptip.text(tip).removeClass("inactive");
     }
 }
 

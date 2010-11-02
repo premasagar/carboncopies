@@ -1,7 +1,7 @@
 CARBONCOPIES
 ============
 
-See it live: http://carboncopi.es
+See it live: [http://carboncopi.es](http://carboncopi.es)
 
 This is a carbon comparison game, built in a weekend at the Rewired State "[Carbon & Energy Hack Day](http://www.rewiredstate.org/events/carbon-and-energy)".
 

@@ -11,7 +11,7 @@ How well do you know the carbon impact of things? How many cups of coffee have s
 * JavaScript: [Premasagar Rose](http://twitter.com/premasagar)
 * Data manipulation: [Laura James](http://lbj.org.uk)
 * Visual design: [Josh Pickett](http://twitter.com/lordjawsh)
-* Sysadmin: [David Kendal](http://twitter.com/dpkendal)
+* CouchDB experiments: [David Kendal](http://twitter.com/dpkendal)
 * Conceptual shebang: [Isabell Long](http://twitter.com/issyl0)
 
 With big inspiration from [Duncan Clark](http://www.1010global.org/blogs/duncanclark) & [Luke Nicholson](http://moreassociates.com).
